@@ -24,6 +24,9 @@ import type { Ticket, Agent } from "@/lib/types";
 interface TicketHeaderProps {
   ticket: Ticket;
   agents: Agent[];
+  onAssign: (ticketId: string, agentId: string) => void;
+  onResolve: (ticketId: string) => void;
+  onArchive: (ticketId: string) => void;
 }
 
 const statusVariant: { [key: string]: "default" | "secondary" | "destructive" } = {
@@ -32,7 +35,7 @@ const statusVariant: { [key: string]: "default" | "secondary" | "destructive" } 
     resolved: "destructive",
 }
 
-export function TicketHeader({ ticket, agents }: TicketHeaderProps) {
+export function TicketHeader({ ticket, agents, onAssign, onResolve, onArchive }: TicketHeaderProps) {
   return (
     <div className="flex items-center p-3 border-b">
       <div className="flex items-center gap-2 flex-1">
@@ -47,7 +50,7 @@ export function TicketHeader({ ticket, agents }: TicketHeaderProps) {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" disabled={ticket.status === 'resolved'}>
               <span>Assign</span>
               <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
@@ -56,14 +59,14 @@ export function TicketHeader({ ticket, agents }: TicketHeaderProps) {
             <DropdownMenuLabel>Assign to</DropdownMenuLabel>
             <DropdownMenuSeparator />
             {agents.map((agent) => (
-              <DropdownMenuItem key={agent.id}>{agent.name}</DropdownMenuItem>
+              <DropdownMenuItem key={agent.id} onClick={() => onAssign(ticket.id, agent.id)}>{agent.name}</DropdownMenuItem>
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <Button variant="default" size="sm">
+        <Button variant="default" size="sm" onClick={() => onResolve(ticket.id)} disabled={ticket.status === 'resolved'}>
           <Archive className="mr-2 h-4 w-4" />
-          Resolve
+          {ticket.status === 'resolved' ? 'Resolved' : 'Resolve'}
         </Button>
 
         <DropdownMenu>
@@ -74,9 +77,9 @@ export function TicketHeader({ ticket, agents }: TicketHeaderProps) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onArchive(ticket.id)}>
               <ArchiveX className="mr-2 h-4 w-4" />
-              Mark as spam
+              Archive
             </DropdownMenuItem>
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>

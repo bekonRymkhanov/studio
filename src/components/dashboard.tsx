@@ -9,7 +9,7 @@ import {
   CustomerColumn,
   TicketViewPlaceholder,
 } from "@/components/layout";
-import type { Ticket, Customer, Agent } from "@/lib/types";
+import type { Ticket, Customer, Agent, Message } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 
 interface DashboardProps {
@@ -50,7 +50,7 @@ export function Dashboard({
       );
     }
   };
-  
+
   const unreadCount = React.useMemo(() => tickets.filter(t => t.unread).length, [tickets]);
 
   const handleSimulateNewTicket = () => {
@@ -81,7 +81,62 @@ export function Dashboard({
       title: "New Ticket Received",
       description: newTicket.subject,
     })
-  }
+  };
+
+  const handleSendMessage = (ticketId: string, text: string, isInternal: boolean) => {
+    const agent = agents.find(a => a.id === 'agent-1'); // Assume current agent is Alex
+    if (!agent) return;
+
+    const newMessage: Message = {
+      id: `msg-${Date.now()}`,
+      author: 'agent',
+      authorName: agent.name,
+      authorAvatarUrl: agent.avatarUrl,
+      text,
+      timestamp: new Date().toISOString(),
+      isInternal,
+    };
+
+    setTickets(prev => prev.map(t => 
+      t.id === ticketId ? {...t, messages: [...t.messages, newMessage]} : t
+    ));
+  };
+  
+  const handleAssignTicket = (ticketId: string, agentId: string) => {
+    setTickets(prev => prev.map(t => t.id === ticketId ? {...t, agentId} : t));
+    const agent = agents.find(a => a.id === agentId);
+    toast({
+      title: "Ticket Assigned",
+      description: `Ticket #${ticketId.slice(-4)} assigned to ${agent?.name}.`
+    });
+  };
+
+  const handleResolveTicket = (ticketId: string) => {
+    setTickets(prev => prev.map(t => t.id === ticketId ? {...t, status: 'resolved'} : t));
+     toast({
+      title: "Ticket Resolved",
+      description: `Ticket #${ticketId.slice(-4)} has been marked as resolved.`
+    });
+  };
+
+  const handleArchiveTicket = (ticketId: string) => {
+    const ticketIndex = tickets.findIndex(t => t.id === ticketId);
+    setTickets(prev => prev.filter(t => t.id !== ticketId));
+
+    if (selectedTicketId === ticketId) {
+      if (tickets.length > 1) {
+        const nextTicket = tickets[ticketIndex + 1] || tickets[ticketIndex - 1];
+        setSelectedTicketId(nextTicket.id);
+      } else {
+        setSelectedTicketId(null);
+      }
+    }
+     toast({
+      variant: 'destructive',
+      title: "Ticket Archived",
+      description: `Ticket #${ticketId.slice(-4)} has been archived.`
+    });
+  };
 
 
   return (
@@ -100,7 +155,14 @@ export function Dashboard({
             <div className="hidden md:flex flex-col border-l">
               {selectedTicket && selectedCustomer ? (
                 <>
-                  <TicketColumn ticket={selectedTicket} agents={agents} />
+                  <TicketColumn
+                    ticket={selectedTicket}
+                    agents={agents}
+                    onAssign={handleAssignTicket}
+                    onResolve={handleResolveTicket}
+                    onArchive={handleArchiveTicket}
+                    onSendMessage={handleSendMessage}
+                  />
                 </>
               ) : (
                 <TicketViewPlaceholder />
