@@ -27,20 +27,20 @@ interface AppSidebarProps {
 export function AppSidebar({ unreadCount }: AppSidebarProps) {
   return (
     <aside className="hidden md:flex w-16 flex-col items-center border-r bg-card text-card-foreground py-4 space-y-4">
-      <Link href="#" className="flex items-center gap-2 font-bold text-primary">
+      <Link href="/" className="flex items-center gap-2 font-bold text-primary">
         <Triangle className="h-8 w-8" />
         <span className="sr-only">UnifiedAssist</span>
       </Link>
       <TooltipProvider>
         <nav className="flex flex-1 flex-col items-center gap-4 px-2">
           <IntelligentSearch />
-          <NavItem icon={Inbox} label="Inbox" badgeCount={unreadCount} isActive />
-          <NavItem icon={Users} label="Customers" />
-          <NavItem icon={BarChart2} label="Reports" />
-          <NavItem icon={Settings} label="Settings" />
+          <NavItem href="/" icon={Inbox} label="Inbox" badgeCount={unreadCount} isActive />
+          <NavItem href="/customers" icon={Users} label="Customers" />
+          <NavItem href="/reports" icon={BarChart2} label="Reports" />
+          <NavItem href="/settings" icon={Settings} label="Settings" />
         </nav>
         <div className="flex flex-col items-center gap-4 px-2">
-          <NavItem icon={LifeBuoy} label="Help" />
+          <NavItem href="#" icon={LifeBuoy} label="Help" />
           <Tooltip>
             <TooltipTrigger asChild>
               <Link href="#">
@@ -64,6 +64,7 @@ export function AppSidebar({ unreadCount }: AppSidebarProps) {
 }
 
 interface NavItemProps {
+  href: string;
   icon: React.ElementType;
   label: string;
   badgeCount?: number;
@@ -71,6 +72,7 @@ interface NavItemProps {
 }
 
 function NavItem({
+  href,
   icon: Icon,
   label,
   badgeCount,
@@ -80,7 +82,7 @@ function NavItem({
     <Tooltip>
       <TooltipTrigger asChild>
         <Link
-          href="#"
+          href={href}
           className={`relative flex items-center justify-center rounded-lg p-2 transition-colors ${
             isActive
               ? "bg-accent text-accent-foreground"

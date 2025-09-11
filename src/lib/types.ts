@@ -4,6 +4,12 @@ export type Agent = {
   avatarUrl: string;
 };
 
+export type Note = {
+  id: string;
+  text: string;
+  createdAt: string;
+};
+
 export type Customer = {
   id: string;
   name: string;
@@ -12,6 +18,7 @@ export type Customer = {
   avatarUrl: string;
   orderIds: string[];
   lastInteraction: string;
+  notes?: Note[];
 };
 
 export type Message = {

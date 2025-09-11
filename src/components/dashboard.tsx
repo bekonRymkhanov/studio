@@ -9,7 +9,7 @@ import {
   CustomerColumn,
   TicketViewPlaceholder,
 } from "@/components/layout";
-import type { Ticket, Customer, Agent, Message } from "@/lib/types";
+import type { Ticket, Customer, Agent, Message, Note } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 
 interface DashboardProps {
@@ -20,11 +20,12 @@ interface DashboardProps {
 
 export function Dashboard({
   tickets: initialTickets,
-  customers,
+  customers: initialCustomers,
   agents,
 }: DashboardProps) {
   const { toast } = useToast();
   const [tickets, setTickets] = React.useState(initialTickets);
+  const [customers, setCustomers] = React.useState(initialCustomers);
   const [selectedTicketId, setSelectedTicketId] = React.useState<
     string | null
   >(initialTickets[0]?.id ?? null);
@@ -138,6 +139,29 @@ export function Dashboard({
     });
   };
 
+  const handleSaveNote = (customerId: string, noteText: string) => {
+    setCustomers(prevCustomers =>
+      prevCustomers.map(c => {
+        if (c.id === customerId) {
+          const newNote: Note = {
+            id: `note-${Date.now()}`,
+            text: noteText,
+            createdAt: new Date().toISOString(),
+          };
+          return {
+            ...c,
+            notes: c.notes ? [...c.notes, newNote] : [newNote],
+          };
+        }
+        return c;
+      })
+    );
+    toast({
+      title: 'Note Saved',
+      description: 'A new note has been added to the customer profile.',
+    });
+  };
+
 
   return (
     <div className="flex h-screen w-full overflow-hidden bg-card">
@@ -177,6 +201,7 @@ export function Dashboard({
                     customerTickets={tickets.filter(
                       (t) => t.customerId === selectedCustomer.id
                     )}
+                    onSaveNote={handleSaveNote}
                   />
                 </>
               ) : (

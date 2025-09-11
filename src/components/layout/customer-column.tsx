@@ -1,3 +1,6 @@
+"use client";
+
+import * as React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,17 +20,29 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import type { Customer, Ticket } from "@/lib/types";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, format } from "date-fns";
+import { Textarea } from "../ui/textarea";
 
 interface CustomerColumnProps {
   customer: Customer;
   customerTickets: Ticket[];
+  onSaveNote: (customerId: string, noteText: string) => void;
 }
 
 export function CustomerColumn({
   customer,
   customerTickets,
+  onSaveNote,
 }: CustomerColumnProps) {
+  const [note, setNote] = React.useState("");
+
+  const handleSaveNote = () => {
+    if (note.trim()) {
+      onSaveNote(customer.id, note);
+      setNote("");
+    }
+  };
+
   return (
     <ScrollArea className="h-full">
       <div className="p-4 space-y-6">
@@ -103,22 +118,37 @@ export function CustomerColumn({
           <TabsContent value="notes" className="mt-4">
             <Card>
               <CardContent className="p-4 space-y-4">
-                <Textarea placeholder="Add a note for this customer..." />
-                <Button size="sm">Save Note</Button>
+                <Textarea
+                  placeholder="Add a note for this customer..."
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                />
+                <Button size="sm" onClick={handleSaveNote} disabled={!note.trim()}>
+                  Save Note
+                </Button>
+                <Separator />
+                <div className="space-y-3">
+                  <h4 className="text-sm font-medium">Existing Notes</h4>
+                  {customer.notes && customer.notes.length > 0 ? (
+                    customer.notes.map((note) => (
+                      <div key={note.id} className="text-sm border-l-2 pl-3">
+                        <p>{note.text}</p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {format(new Date(note.createdAt), 'MMM d, yyyy')}
+                        </p>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      No notes for this customer yet.
+                    </p>
+                  )}
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
         </Tabs>
       </div>
     </ScrollArea>
-  );
-}
-
-function Textarea(props: React.ComponentProps<"textarea">) {
-  return (
-    <textarea
-      className="flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-      {...props}
-    />
   );
 }

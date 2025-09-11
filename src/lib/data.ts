@@ -15,6 +15,13 @@ export const customers: Customer[] = [
     avatarUrl: "/avatars/04.png",
     orderIds: ["#99877", "#99878", "#99879"],
     lastInteraction: "2024-08-22T14:30:00Z",
+    notes: [
+      {
+        id: "note-1",
+        text: "Customer is a VIP. Prioritize their requests.",
+        createdAt: "2024-08-20T10:00:00Z",
+      },
+    ],
   },
   {
     id: "cust-2",
@@ -24,6 +31,7 @@ export const customers: Customer[] = [
     avatarUrl: "/avatars/05.png",
     orderIds: ["#10321", "#10322"],
     lastInteraction: "2024-08-23T10:15:00Z",
+    notes: [],
   },
   {
     id: "cust-3",
@@ -33,6 +41,7 @@ export const customers: Customer[] = [
     avatarUrl: "/avatars/06.png",
     orderIds: ["#45001"],
     lastInteraction: "2024-08-21T09:00:00Z",
+    notes: [],
   },
 ];
 
