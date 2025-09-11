@@ -1,0 +1,130 @@
+"use client";
+
+import * as React from "react";
+import {
+  AppSidebar,
+  AppHeader,
+  InboxColumn,
+  TicketColumn,
+  CustomerColumn,
+  TicketViewPlaceholder,
+} from "@/components/layout";
+import type { Ticket, Customer, Agent } from "@/lib/types";
+import { useToast } from "@/hooks/use-toast";
+
+interface DashboardProps {
+  tickets: Ticket[];
+  customers: Customer[];
+  agents: Agent[];
+}
+
+export function Dashboard({
+  tickets: initialTickets,
+  customers,
+  agents,
+}: DashboardProps) {
+  const { toast } = useToast();
+  const [tickets, setTickets] = React.useState(initialTickets);
+  const [selectedTicketId, setSelectedTicketId] = React.useState<
+    string | null
+  >(initialTickets[0]?.id ?? null);
+
+  const selectedTicket = React.useMemo(
+    () => tickets.find((t) => t.id === selectedTicketId),
+    [tickets, selectedTicketId]
+  );
+
+  const selectedCustomer = React.useMemo(
+    () => customers.find((c) => c.id === selectedTicket?.customerId),
+    [customers, selectedTicket]
+  );
+
+  const handleSelectTicket = (ticketId: string) => {
+    setSelectedTicketId(ticketId);
+    const ticket = tickets.find((t) => t.id === ticketId);
+    if (ticket?.unread) {
+      setTickets((prevTickets) =>
+        prevTickets.map((t) =>
+          t.id === ticketId ? { ...t, unread: false } : t
+        )
+      );
+    }
+  };
+  
+  const unreadCount = React.useMemo(() => tickets.filter(t => t.unread).length, [tickets]);
+
+  const handleSimulateNewTicket = () => {
+    const newTicket: Ticket = {
+      id: `ticket-${Date.now()}`,
+      subject: "Urgent: Website is down!",
+      customerId: "cust-2",
+      agentId: "agent-1",
+      channel: "email",
+      status: "open",
+      priority: "high",
+      unread: true,
+      createdAt: new Date().toISOString(),
+      messages: [
+        {
+          id: `msg-${Date.now()}`,
+          author: "customer",
+          authorName: "Emily Carter",
+          authorAvatarUrl: "/avatars/05.png",
+          text: "Help! Our company website just went offline. We are losing business every minute. Please investigate immediately.",
+          timestamp: new Date().toISOString(),
+          isInternal: false,
+        },
+      ],
+    };
+    setTickets(prev => [newTicket, ...prev]);
+    toast({
+      title: "New Ticket Received",
+      description: newTicket.subject,
+    })
+  }
+
+
+  return (
+    <div className="flex h-screen w-full overflow-hidden bg-card">
+      <AppSidebar unreadCount={unreadCount} />
+      <div className="flex flex-1 flex-col">
+        <AppHeader onNewTicket={handleSimulateNewTicket} />
+        <main className="flex flex-1 overflow-hidden">
+          <div className="grid w-full grid-cols-1 md:grid-cols-[minmax(300px,_1fr)_2fr] lg:grid-cols-[minmax(300px,_350px)_minmax(400px,_2fr)_minmax(300px,_350px)]">
+            <InboxColumn
+              tickets={tickets}
+              selectedTicketId={selectedTicketId}
+              onSelectTicket={handleSelectTicket}
+            />
+            
+            <div className="hidden md:flex flex-col border-l">
+              {selectedTicket && selectedCustomer ? (
+                <>
+                  <TicketColumn ticket={selectedTicket} agents={agents} />
+                </>
+              ) : (
+                <TicketViewPlaceholder />
+              )}
+            </div>
+
+            <div className="hidden lg:flex flex-col border-l bg-background/50">
+               {selectedTicket && selectedCustomer ? (
+                <>
+                  <CustomerColumn
+                    customer={selectedCustomer}
+                    customerTickets={tickets.filter(
+                      (t) => t.customerId === selectedCustomer.id
+                    )}
+                  />
+                </>
+              ) : (
+                <TicketViewPlaceholder />
+              )}
+            </div>
+
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}
