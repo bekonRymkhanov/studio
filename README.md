@@ -2,6 +2,9 @@
 
 UnifiedAssist is a modern, AI-powered customer support dashboard built with Next.js. It provides a unified inbox for managing customer tickets, viewing customer profiles, and gaining insights from reports.
 
+## Link
+### [UnifiedAssist](https://studio--studio-6809867374-a20f8.us-central1.hosted.app/)
+
 ## Tech Stack
 
 This project is built with a modern tech stack to ensure a high-quality, scalable, and maintainable application.
