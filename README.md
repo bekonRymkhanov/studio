@@ -103,5 +103,46 @@ To maintain code quality and consistency, please follow these guidelines when co
 ### AI Features with Genkit
 
 - All AI-related functionality is managed through Genkit.
-- New AI capabilities should be implemented as Genkit "flows" within the `src/ai/flows` directory.
+
+- New AI capabilities should be implemented as Genkit "flows" within the src/ai/flows directory.
+
 - Define clear input and output schemas for each flow using Zod.
+
+## Licenses and Rules
+
+This project is licensed under the MIT License (see below).
+
+Contributors must agree to license their code under the same license.
+
+Do not commit sensitive information such as API keys, secrets, or credentials. Use .env.local for environment variables.
+
+Follow the Conventional Commits standard for commit messages (e.g., feat:, fix:, docs:, refactor:).
+
+All pull requests must be reviewed by at least one maintainer before merging.
+
+Respect community guidelines: be collaborative, constructive, and professional.
+
+```sql
+MIT License
+
+Copyright (c) 2025 UnifiedAssist
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+```
