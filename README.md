@@ -5,6 +5,15 @@ UnifiedAssist is a modern, AI-powered customer support dashboard built with Next
 ## Link
 ### [UnifiedAssist](https://studio--studio-6809867374-a20f8.us-central1.hosted.app/)
 
+## Purpose & SDG Alignment
+
+UnifiedAssist supports the UN Sustainable Development Goal 8: Decent Work & Economic Growth.
+It helps small businesses and service organizations improve customer communication efficiency.
+It reduces operational overhead by centralizing ticket workflow and search.
+It provides free, open-source tooling for teams that cannot afford commercial customer-support platforms.
+This makes the platform a digital enabler for accessible and fair business infrastructure.
+
+
 ## Tech Stack
 
 This project is built with a modern tech stack to ensure a high-quality, scalable, and maintainable application.
@@ -78,6 +87,19 @@ This will start the Next.js application on `http://localhost:9002` by default. T
 - `npm run start`: Starts the production server.
 - `npm run lint`: Lints the codebase using Next.js's built-in ESLint configuration.
 
+## Usage Guide
+- Tickets
+- Create new tickets from the dashboard
+- Assign to agents
+- Update status & notes
+- Customers
+- View unified customer profiles
+- Track ticket history
+- Add notes, files, tags
+- AI Search
+- Search support messages semantically
+- Find similar tickets or customer conversations
+
 ## Key Features
 
 - **Ticket Management**: A central inbox to view, manage, and respond to customer support tickets.
@@ -106,24 +128,34 @@ To maintain code quality and consistency, please follow these guidelines when co
 ### AI Features with Genkit
 
 - All AI-related functionality is managed through Genkit.
-
 - New AI capabilities should be implemented as Genkit "flows" within the src/ai/flows directory.
-
 - Define clear input and output schemas for each flow using Zod.
 
 ## Licenses and Rules
 
 This project is licensed under the MIT License (see below).
-
 Contributors must agree to license their code under the same license.
-
 Do not commit sensitive information such as API keys, secrets, or credentials. Use .env.local for environment variables.
-
 Follow the Conventional Commits standard for commit messages (e.g., feat:, fix:, docs:, refactor:).
-
 All pull requests must be reviewed by at least one maintainer before merging.
-
 Respect community guidelines: be collaborative, constructive, and professional.
+
+## Maintainers Privacy & Data Security
+
+Even though this is an open-source project, we treat user data seriously.
+Our Data Principles
+
+    No sensitive data should be committed (API keys, credentials, user data).
+    Developers must use .env.local for configuration.
+    Sample data must be anonymized before sharing.
+    Any deployment must implement:
+        HTTPS
+        Protected environment variables
+        Access controls
+        Secure database storage
+
+Maintained by Bekarys Rymkhanov And Tazhibaeva Aizada
+GitHub: https://github.com/bekonRymkhanov
 
 ```sql
 MIT License
